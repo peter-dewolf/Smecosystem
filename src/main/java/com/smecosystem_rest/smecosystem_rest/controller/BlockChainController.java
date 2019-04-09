@@ -7,9 +7,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.web3j.crypto.Credentials;
+import org.web3j.crypto.Wallet;
+import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
+import org.web3j.protocol.core.Request;
 import org.web3j.protocol.core.methods.response.EthBlockNumber;
+import org.web3j.protocol.core.methods.response.EthCompileSolidity;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.http.HttpService;
 
@@ -22,7 +26,6 @@ import java.util.concurrent.ExecutionException;
 public class BlockChainController {
 
     private final String DEFAULT_ADDRESS = "http://127.0.0.1:7545";
-
 
     @GetMapping("/getCurrentBlock")
     public ResponseEntity<EthBlockNumber> getCurrentBlock() throws ResourceNotFoundException {
@@ -40,17 +43,16 @@ public class BlockChainController {
         }
     }
 
-
-
     @GetMapping("/deploySmartContract")
     public ResponseEntity<String> deploySmartContract() {
         Web3j web3 = Web3j.build(new HttpService(DEFAULT_ADDRESS));
+        Request<?, EthCompileSolidity> contract = web3.ethCompileSolidity("pragma solidity ^0.4.22; contract helloWorld { function renderHelloWorld () public pure returns (string) { return 'helloWorld';}}");
+
         Credentials credentials = Credentials.create("privateKey", "public Key");
 
 
         return ResponseEntity.ok().body("deployed");
     }
-
 
     @GetMapping("/getAccounts")
     public ResponseEntity<List<String>> getAccounts() {
