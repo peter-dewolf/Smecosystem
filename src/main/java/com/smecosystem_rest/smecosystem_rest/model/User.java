@@ -25,6 +25,8 @@ public class User {
     private String firstName;
     private String lastName;
     private String emailId;
+    private String walletAddress;
+
     private Date createdAt;
     private String createdBy;
     private Date updatedAt;
@@ -97,5 +99,14 @@ public class User {
     }
     public void setUpdatedby(String updatedby) {
         this.updatedby = updatedby;
+    }
+
+    @Column(name = "wallet_address")
+    public String getWalletAddress() {
+        return walletAddress;
+    }
+
+    public void setWalletAddress(String walletAddress) {
+        this.walletAddress = walletAddress;
     }
 }

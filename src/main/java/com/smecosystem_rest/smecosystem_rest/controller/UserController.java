@@ -41,6 +41,14 @@ public class UserController {
         return ResponseEntity.ok().body(user);
     }
 
+    @GetMapping("/getUserWalletAddress/{id}")
+    public ResponseEntity<String> getUserWalletAddress(
+            @PathVariable(value = "id") Long userId) throws ResourceNotFoundException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found on :: "+ userId));
+        return ResponseEntity.ok().body(user.getWalletAddress());
+    }
+
     @PostMapping("/createUser")
     public User createUser(@Valid @RequestBody User user) {
         int x = 5;
@@ -73,4 +81,6 @@ public class UserController {
         response.put("deleted", Boolean.TRUE);
         return response;
     }
+
+
 }
