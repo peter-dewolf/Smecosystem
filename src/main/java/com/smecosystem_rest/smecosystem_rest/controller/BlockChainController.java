@@ -4,16 +4,15 @@ package com.smecosystem_rest.smecosystem_rest.controller;
 import com.smecosystem_rest.smecosystem_rest.exception.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.methods.response.EthBlockNumber;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.http.HttpService;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -41,6 +40,18 @@ public class BlockChainController {
         }
     }
 
+
+
+    @GetMapping("/deploySmartContract")
+    public ResponseEntity<String> deploySmartContract() {
+        Web3j web3 = Web3j.build(new HttpService(DEFAULT_ADDRESS));
+        Credentials credentials = Credentials.create("privateKey", "public Key");
+
+
+        return ResponseEntity.ok().body("deployed");
+    }
+
+
     @GetMapping("/getAccounts")
     public ResponseEntity<List<String>> getAccounts() {
         Web3j web3 = Web3j.build(new HttpService(DEFAULT_ADDRESS));
@@ -48,7 +59,6 @@ public class BlockChainController {
 
         return ResponseEntity.ok().body(accounts);
     }
-
 
     @GetMapping("/getBalanceByAddress")
     public ResponseEntity<EthGetBalance> getBalanceByAddress() throws ResourceNotFoundException {
