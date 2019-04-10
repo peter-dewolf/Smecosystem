@@ -72,7 +72,6 @@ public class UserController {
 
     @PostMapping("/createUser")
     public User createUser(@Valid @RequestBody User user) {
-        int x = 5;
         return userRepository.save(user);
     }
 
