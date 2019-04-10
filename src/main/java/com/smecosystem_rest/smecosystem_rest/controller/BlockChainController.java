@@ -4,6 +4,7 @@ package com.smecosystem_rest.smecosystem_rest.controller;
 import com.smecosystem_rest.smecosystem_rest.exception.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.web3j.crypto.Credentials;
@@ -61,11 +62,10 @@ public class BlockChainController {
         return ResponseEntity.ok().body(accounts);
     }
 
-    @GetMapping("/getBalanceByAddress")
-    public ResponseEntity<EthGetBalance> getBalanceByAddress() throws ResourceNotFoundException {
+    @GetMapping("/getBalanceByAddress/{address}")
+    public ResponseEntity<EthGetBalance> getBalanceByAddress(@PathVariable(value = "address") String address) throws ResourceNotFoundException {
 
         // ideally this comes from the user repository
-        String address = "0xFB17e2e783A90eAb439429AD37F4C3E188F472D2";
 
         Web3j web3 = Web3j.build(new HttpService(DEFAULT_ADDRESS));
         EthGetBalance result;

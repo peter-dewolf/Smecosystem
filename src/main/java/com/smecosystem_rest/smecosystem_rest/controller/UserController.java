@@ -49,6 +49,27 @@ public class UserController {
         return ResponseEntity.ok().body(user.getWalletAddress());
     }
 
+
+    @GetMapping("/setPrivateKey/{id}/{private_key}")
+    public ResponseEntity<String> setPrivateKey(
+            @PathVariable(value = "id") Long userId, @PathVariable(value = "private_key") String privateKey) throws ResourceNotFoundException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found on :: " + userId));
+        user.setPrivateKey(privateKey);
+        userRepository.save(user);
+        return ResponseEntity.ok().body("Private key updated");
+    }
+
+    @GetMapping("/setPublicKey/{id}/{public_key}")
+    public ResponseEntity<String> setPublicKey(
+            @PathVariable(value = "id") Long userId, @PathVariable(value = "public_key") String publicKey) throws ResourceNotFoundException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found on :: "+ userId));
+        user.setPublicKey(publicKey);
+        userRepository.save(user);
+        return ResponseEntity.ok().body("Public key updated");
+    }
+
     @PostMapping("/createUser")
     public User createUser(@Valid @RequestBody User user) {
         int x = 5;
