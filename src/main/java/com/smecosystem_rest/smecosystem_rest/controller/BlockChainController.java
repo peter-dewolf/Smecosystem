@@ -50,7 +50,6 @@ public class BlockChainController {
 
         Credentials credentials = Credentials.create("privateKey", "public Key");
 
-
         return ResponseEntity.ok().body("deployed");
     }
 
@@ -64,8 +63,9 @@ public class BlockChainController {
 
     @GetMapping("/getBalanceByAddress")
     public ResponseEntity<EthGetBalance> getBalanceByAddress() throws ResourceNotFoundException {
+
         // ideally this comes from the user repository
-        String address = "0x2499316Ba3F9fbB9f52EdeEbF4eD998f625Fa44a";
+        String address = "0xFB17e2e783A90eAb439429AD37F4C3E188F472D2";
 
         Web3j web3 = Web3j.build(new HttpService(DEFAULT_ADDRESS));
         EthGetBalance result;
