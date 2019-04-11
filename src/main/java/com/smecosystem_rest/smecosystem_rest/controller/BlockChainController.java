@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.web3j.crypto.Credentials;
-import org.web3j.crypto.Wallet;
-import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.Request;
@@ -48,6 +46,7 @@ public class BlockChainController {
     public ResponseEntity<String> deploySmartContract() {
         Web3j web3 = Web3j.build(new HttpService(DEFAULT_ADDRESS));
         Request<?, EthCompileSolidity> contract = web3.ethCompileSolidity("pragma solidity ^0.4.22; contract helloWorld { function renderHelloWorld () public pure returns (string) { return 'helloWorld';}}");
+
 
         Credentials credentials = Credentials.create("privateKey", "public Key");
 
