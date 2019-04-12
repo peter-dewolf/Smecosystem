@@ -2,7 +2,6 @@ package com.smecosystem_rest.smecosystem_rest.controller;
 
 
 import com.smecosystem_rest.smecosystem_rest.exception.ResourceNotFoundException;
-import com.smecosystem_rest.smecosystem_rest.model.User;
 import com.smecosystem_rest.smecosystem_rest.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -10,9 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
-import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.Request;
@@ -21,10 +18,8 @@ import org.web3j.protocol.core.methods.response.EthCompileSolidity;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.http.HttpService;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -89,48 +84,12 @@ public class BlockChainController {
         }
     }
 
-    @GetMapping("/createNewWallet/{privateKey}/{publicKey}/{userId}")
-    public ResponseEntity<String> createNewWallet(@PathVariable(value = "privateKey") String privateKey,
-                                                         @PathVariable(value = "publicKey") String publicKey,
-                                                         @PathVariable(value = "userId") Long userId) throws ResourceNotFoundException {
-
-        Web3j web3j = Web3j.build(new HttpService(DEFAULT_ADDRESS));
-        // ideally this comes from the user repository
-        Optional<User> user = this.userRepository.findById(userId);
-        if(user.isPresent()) {
-            User foundUser = user.get();
-            foundUser.setPublicKey(publicKey);
-            foundUser.setPrivateKey(privateKey);
-            userRepository.save(foundUser);
-
-            return ResponseEntity.ok().body("User wallet created with address: ");
-        } else {
-            throw new ResourceNotFoundException("User not found on :: "+ userId);
-        }
-    }
-
-
     @GetMapping("/transferEther/{targetWallet}/{amount}/{userId}")
     public ResponseEntity<String> createNewWallet(@PathVariable(value = "targetWallet") String targetWallet,
                                                          @PathVariable(value = "amount") Long amount,
                                                          @PathVariable(value = "userId") Long userId) throws ResourceNotFoundException {
 
-        Web3j web3j = Web3j.build(new HttpService(DEFAULT_ADDRESS));
-        // ideally this comes from the user repository
-        Optional<User> user = this.userRepository.findById(userId);
-        if(user.isPresent()) {
-            User foundUser = user.get();
-
-            try {
-                Credentials credentials = WalletUtils.loadCredentials(foundUser.getWalletPassword(), "location");
-            } catch (IOException | CipherException e) {
-                return ResponseEntity.ok().body("Problems while retrieving the wallet, try again later.");
-            }
-
-            return ResponseEntity.ok().body("User wallet created with address: ");
-        } else {
-            throw new ResourceNotFoundException("User not found on :: "+ userId);
-        }
+        return ResponseEntity.ok().body("");
     }
 
 

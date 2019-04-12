@@ -1,25 +1,21 @@
 package com.smecosystem_rest.smecosystem_rest.controller;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.validation.Valid;
-
 import com.smecosystem_rest.smecosystem_rest.exception.ResourceNotFoundException;
 import com.smecosystem_rest.smecosystem_rest.model.User;
 import com.smecosystem_rest.smecosystem_rest.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.web3j.crypto.CipherException;
+import org.web3j.crypto.WalletUtils;
+
+import javax.validation.Valid;
+import java.io.File;
+import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.util.*;
 
 @RestController
 @RequestMapping("/userRestService")
@@ -47,27 +43,6 @@ public class UserController {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found on :: "+ userId));
         return ResponseEntity.ok().body(user.getWalletAddress());
-    }
-
-
-    @GetMapping("/setPrivateKey/{id}/{private_key}")
-    public ResponseEntity<String> setPrivateKey(
-            @PathVariable(value = "id") Long userId, @PathVariable(value = "private_key") String privateKey) throws ResourceNotFoundException {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found on :: " + userId));
-        user.setPrivateKey(privateKey);
-        userRepository.save(user);
-        return ResponseEntity.ok().body("Private key updated");
-    }
-
-    @GetMapping("/setPublicKey/{id}/{public_key}")
-    public ResponseEntity<String> setPublicKey(
-            @PathVariable(value = "id") Long userId, @PathVariable(value = "public_key") String publicKey) throws ResourceNotFoundException {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found on :: "+ userId));
-        user.setPublicKey(publicKey);
-        userRepository.save(user);
-        return ResponseEntity.ok().body("Public key updated");
     }
 
     @PostMapping("/createUser")
@@ -101,6 +76,23 @@ public class UserController {
         response.put("deleted", Boolean.TRUE);
         return response;
     }
+
+    @GetMapping("/createNewWallet/{password}/{userId}")
+    public ResponseEntity<String> createNewWallet(@PathVariable(value = "password") String password, @PathVariable(value = "userId") Long userId) throws ResourceNotFoundException, NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException, CipherException, IOException {
+
+        // ideally this comes from the user repository
+        Optional<User> user = this.userRepository.findById(userId);
+        if(user.isPresent()) {
+            User foundUser = user.get();
+            String filename = WalletUtils.generateNewWalletFile(password, new File(User.getWalletPath()));
+            foundUser.setWalletAddress(filename);
+            userRepository.save(foundUser);
+            return ResponseEntity.ok().body("User wallet created with name: " + filename);
+        } else {
+            throw new ResourceNotFoundException("User not found on :: "+ userId);
+        }
+    }
+
 
 
 }

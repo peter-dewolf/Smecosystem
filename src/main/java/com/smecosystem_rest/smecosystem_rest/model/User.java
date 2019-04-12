@@ -34,9 +34,10 @@ public class User {
     private String createdBy;
     private Date updatedAt;
     private String updatedby;
-    private String walletPassword;
-    private String privateKey;
-    private String publicKey;
+
+    public static String getWalletPath() {
+        return walletPath;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -114,32 +115,5 @@ public class User {
 
     public void setWalletAddress(String walletAddress) {
         this.walletAddress = walletAddress;
-    }
-
-    @Column(name = "private_key")
-    public String getPrivateKey() {
-        return privateKey;
-    }
-
-    public void setPrivateKey(String privateKey) {
-        this.privateKey = privateKey;
-    }
-
-    @Column(name = "public_key")
-    public String getPublicKey() {
-        return publicKey;
-    }
-
-    public void setPublicKey(String publicKey) {
-        this.publicKey = publicKey;
-    }
-
-    @Column(name = "wallet_password")
-    public String getWalletPassword() {
-        return walletPassword;
-    }
-
-    public void setWalletPassword(String walletPassword) {
-        this.walletPassword = walletPassword;
     }
 }
