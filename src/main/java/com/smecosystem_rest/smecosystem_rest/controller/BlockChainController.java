@@ -105,7 +105,6 @@ public class BlockChainController {
         Web3j web3j = Web3j.build(new HttpService(DEFAULT_ADDRESS));
         Credentials cred = this.userService.getCredentials(password, userId);
         HelloWorld contract = HelloWorld.deploy(web3j, cred, ManagedTransaction.GAS_PRICE, Contract.GAS_LIMIT).send();
-
         return ResponseEntity.ok().body("The contract address is: " +contract.getContractAddress());
     }
 }

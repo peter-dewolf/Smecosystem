@@ -27,7 +27,7 @@ public class User {
     private long id;
     private String firstName;
     private String lastName;
-    private String emailId;
+    private String emailAddress;
     private String walletAddress;
 
     private Date createdAt;
@@ -65,11 +65,11 @@ public class User {
     }
 
     @Column(name = "email_address", nullable = false)
-    public String getEmailId() {
-        return emailId;
+    public String getEmailAddress() {
+        return emailAddress;
     }
-    public void setEmailId(String emailId) {
-        this.emailId = emailId;
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
     }
 
     @Column(name = "created_at", nullable = false)
