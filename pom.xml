@@ -55,13 +55,13 @@
 		<dependency>
 			<groupId>org.web3j</groupId>
 			<artifactId>core</artifactId>
-			<version>3.4.0</version>
+			<version>4.2.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.web3j/abi -->
 		<dependency>
 			<groupId>org.web3j</groupId>
 			<artifactId>abi</artifactId>
-			<version>3.4.0</version>
+			<version>4.2.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
