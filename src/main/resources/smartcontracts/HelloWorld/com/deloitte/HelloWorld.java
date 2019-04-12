@@ -1,5 +1,3 @@
-package com.deloitte;
-
 import java.math.BigInteger;
 import java.util.Arrays;
 import org.web3j.abi.TypeReference;
