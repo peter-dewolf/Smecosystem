@@ -2,6 +2,8 @@ package com.smecosystem_rest.smecosystem_rest.controller;
 
 
 import com.smecosystem_rest.smecosystem_rest.exception.ResourceNotFoundException;
+import com.smecosystem_rest.smecosystem_rest.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,28 +26,31 @@ import java.util.concurrent.ExecutionException;
 @RequestMapping("/blockchainRestService")
 public class BlockChainController {
 
+    @Autowired
+    private UserRepository userRepository;
+
     private final String DEFAULT_ADDRESS = "http://127.0.0.1:7545";
+
+//    private final Web3j web3j = Web3j.build(new HttpService(DEFAULT_ADDRESS));
 
     @GetMapping("/getCurrentBlock")
     public ResponseEntity<EthBlockNumber> getCurrentBlock() throws ResourceNotFoundException {
-        Web3j web3 = Web3j.build(new HttpService(DEFAULT_ADDRESS));
+        Web3j web3j = Web3j.build(new HttpService(DEFAULT_ADDRESS));
         EthBlockNumber result;
         try {
-            result = web3.ethBlockNumber()
+            result = web3j.ethBlockNumber()
                     .sendAsync()
                     .get();
             return ResponseEntity.ok().body(result);
-        } catch (InterruptedException e) {
-            throw new ResourceNotFoundException("Current block could not be found at the moment, try later");
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             throw new ResourceNotFoundException("Current block could not be found at the moment, try later");
         }
     }
 
     @GetMapping("/deploySmartContract")
     public ResponseEntity<String> deploySmartContract() {
-        Web3j web3 = Web3j.build(new HttpService(DEFAULT_ADDRESS));
-        Request<?, EthCompileSolidity> contract = web3.ethCompileSolidity("pragma solidity ^0.4.22; contract helloWorld { function renderHelloWorld () public pure returns (string) { return 'helloWorld';}}");
+        Web3j web3j = Web3j.build(new HttpService(DEFAULT_ADDRESS));
+        Request<?, EthCompileSolidity> contract = web3j.ethCompileSolidity("pragma solidity ^0.4.22; contract helloWorld { function renderHelloWorld () public pure returns (string) { return 'helloWorld';}}");
 
 
         Credentials credentials = Credentials.create("privateKey", "public Key");
@@ -55,7 +60,7 @@ public class BlockChainController {
 
     @GetMapping("/getAccounts")
     public ResponseEntity<List<String>> getAccounts() {
-        Web3j web3 = Web3j.build(new HttpService(DEFAULT_ADDRESS));
+        Web3j web3j = Web3j.build(new HttpService(DEFAULT_ADDRESS));
         List<String> accounts = new ArrayList<>();
 
         return ResponseEntity.ok().body(accounts);
@@ -66,18 +71,33 @@ public class BlockChainController {
 
         // ideally this comes from the user repository
 
-        Web3j web3 = Web3j.build(new HttpService(DEFAULT_ADDRESS));
+        Web3j web3j = Web3j.build(new HttpService(DEFAULT_ADDRESS));
         EthGetBalance result;
         try {
-            result = web3.ethGetBalance(address,
+            result = web3j.ethGetBalance(address,
                     DefaultBlockParameter.valueOf("latest"))
                     .sendAsync()
                     .get();
             return ResponseEntity.ok().body(result);
-        } catch (InterruptedException e) {
-            throw new ResourceNotFoundException("Current block could not be found at the moment, try later");
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             throw new ResourceNotFoundException("Current block could not be found at the moment, try later");
         }
     }
+
+    @GetMapping("/createNewWallet/{privateKey}/{publicKey}/{userId}")
+    public ResponseEntity<EthGetBalance> createNewWallet(@PathVariable(value = "privateKey") String privateKey,
+                                                         @PathVariable(value = "publicKey") String publicKey,
+                                                         @PathVariable(value = "userId") Long userId) throws ResourceNotFoundException {
+
+        // ideally this comes from the user repository
+        this.userRepository.findById(userId);
+        Web3j web3j = Web3j.build(new HttpService(DEFAULT_ADDRESS));
+
+
+
+        return ResponseEntity.ok().body(null);
+
+    }
+
+
 }

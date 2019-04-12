@@ -11,7 +11,7 @@ import javax.persistence.*;
 public class Smartcontract {
 
     private long id;
-    private String blockAdderss;
+    private String blockAddress;
     private String content;
     private Double discount;
 
@@ -25,12 +25,12 @@ public class Smartcontract {
     }
 
     @Column(name = "block_address")
-    public String getBlockAdderss() {
-        return blockAdderss;
+    public String getBlockAddress() {
+        return blockAddress;
     }
 
-    public void setBlockAdderss(String blockAdderss) {
-        this.blockAdderss = blockAdderss;
+    public void setBlockAddress(String blockAddress) {
+        this.blockAddress = blockAddress;
     }
 
     @Column(name = "content", nullable = false)
