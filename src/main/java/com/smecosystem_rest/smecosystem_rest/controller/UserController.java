@@ -3,6 +3,7 @@ package com.smecosystem_rest.smecosystem_rest.controller;
 import com.smecosystem_rest.smecosystem_rest.exception.ResourceNotFoundException;
 import com.smecosystem_rest.smecosystem_rest.model.User;
 import com.smecosystem_rest.smecosystem_rest.repositories.UserRepository;
+import com.smecosystem_rest.smecosystem_rest.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,10 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/list")
     public List<User> getAllUsers() {
@@ -93,6 +98,11 @@ public class UserController {
         }
     }
 
-
+    @GetMapping("/getWallet/{password}/{userId}")
+    public ResponseEntity<String> getWallet(@PathVariable(value = "password") String password, @PathVariable(value = "userId") Long userId) throws ResourceNotFoundException, NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException, CipherException, IOException {
+        // ideally this comes from the user repository
+        String walletAddress = this.userService.getWalletAddressById(userId, password);
+        return ResponseEntity.ok().body("User wallet found with address with name: " + walletAddress);
+    }
 
 }
