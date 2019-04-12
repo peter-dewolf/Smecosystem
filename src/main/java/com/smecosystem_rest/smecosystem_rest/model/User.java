@@ -21,6 +21,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 public class User {
 
+    // path on the system where the wallet file should be stored
+    private static final String walletPath = "/home/peter/IdeaProjects/smecosystem_rest/src/main/resources/credentialFiles";
+
     private long id;
     private String firstName;
     private String lastName;
@@ -31,6 +34,7 @@ public class User {
     private String createdBy;
     private Date updatedAt;
     private String updatedby;
+    private String walletPassword;
     private String privateKey;
     private String publicKey;
 
@@ -128,5 +132,14 @@ public class User {
 
     public void setPublicKey(String publicKey) {
         this.publicKey = publicKey;
+    }
+
+    @Column(name = "wallet_password")
+    public String getWalletPassword() {
+        return walletPassword;
+    }
+
+    public void setWalletPassword(String walletPassword) {
+        this.walletPassword = walletPassword;
     }
 }
